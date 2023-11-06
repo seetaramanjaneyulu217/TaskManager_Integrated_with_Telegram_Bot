@@ -5,8 +5,9 @@ const dotenv = require('dotenv')
 
 const app = express()
 
-// Exports 
+// Imports 
 const connectToDataBase = require('./config/connect.js')
+const UserLoginRoutes = require('./routes/UserLoginRoutes.js')
 
 
 // Middlewares and function calls
@@ -23,6 +24,10 @@ app.get('/', (req, res) => {
     res.send('Hello I am your server')
 })
 
+app.use('/user', UserLoginRoutes)
+
+
+// Running the server
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on http://localhost:${process.env.PORT}`);
 })
