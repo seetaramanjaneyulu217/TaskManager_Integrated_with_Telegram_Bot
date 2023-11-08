@@ -3,7 +3,9 @@ import { createStore } from "redux";
 const initialState = {
   isLoading: false,
   taskadded: false,
-  taskdone: false
+  taskdone: false,
+  taskdeleted: false,
+  remainder: false
 }
 
 const reducer = (state = initialState, action) => {
@@ -26,6 +28,20 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       taskdone: !state.taskdone
+    }
+  }
+
+  if(action.type === 'taskdeleted') {
+    return {
+      ...state,
+      taskdeleted: !state.taskdeleted
+    }
+  }
+
+  if(action.type === 'remainder') {
+    return {
+      ...state,
+      remainder: action.payload
     }
   }
 

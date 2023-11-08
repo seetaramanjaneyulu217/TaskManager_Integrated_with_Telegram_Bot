@@ -5,16 +5,19 @@ import { useNavigate } from 'react-router-dom';
 import doneimage from '../assets/Done.jpg'
 import TodaySchedulesCard from '../components/TodaySchedulesCard';
 import TodaySchedulesForm from '../components/TodaySchedulesForm';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ClockLoader } from 'react-spinners';
 
 const TodaySchedules = () => {
 
     const token = window.localStorage.getItem("token")
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const remainder = useSelector(state => state.remainder)
     const isLoading = useSelector(state => state.isLoading)
     const taskadded = useSelector(state => state.taskadded)
     const taskdone = useSelector(state => state.taskdone)
+    const taskdeleted = useSelector(state => state.taskdeleted)
     const [todaySchedules, setTodaySchedules] = useState([])
 
     const fetchTodaysSchedules = () => {
@@ -40,6 +43,7 @@ const TodaySchedules = () => {
             }
 
             else {
+                dispatch({ type: 'remainder', payload: result.setRemainder })
                 setTodaySchedules(result.todaySchedules)
             }
         })
@@ -47,7 +51,7 @@ const TodaySchedules = () => {
 
     useEffect(() => {
         fetchTodaysSchedules()
-    }, [taskadded, taskdone])
+    }, [taskadded, taskdone, taskdeleted])
 
     return (
         <>

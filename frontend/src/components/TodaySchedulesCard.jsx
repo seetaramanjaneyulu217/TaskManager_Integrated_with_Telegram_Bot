@@ -10,37 +10,11 @@ const TodaySchedulesCard = ({ schedule }) => {
   const token = window.localStorage.getItem("token")
   const dispatch = useDispatch()
 
-  const ellipsisItems = [
-    {
-      key: '1',
-      label: (
-        <Link rel="noopener noreferrer">
-          <div className='flex gap-1 items-center text-blue-500'>
-            <Pencil strokeWidth={0.75} />
-            <h1 className='text-lg'>Edit</h1>
-          </div>
-        </Link>
-      ),
-    },
-
-    {
-      key: '2',
-      label: (
-        <Link rel="noopener noreferrer">
-          <div className='flex gap-1 items-center text-red-500'>
-            <Trash2 strokeWidth={0.75} />
-            <h1 className='text-lg'>Delete</h1>
-          </div>
-        </Link>
-      ),
-    }
-  ]
-
   const handleTaskDone = () => {
 
     dispatch({ type: 'loading', payload: true })
     const response = fetch('http://localhost:4000/user/today/mark-task-as-done', {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -65,7 +39,79 @@ const TodaySchedulesCard = ({ schedule }) => {
         })
       }
     })
+      .catch(error => {
+        dispatch({ type: 'loading', payload: false })
+        toast.error('Error', {
+          position: 'top-right'
+        })
+      })
   }
+
+
+  const handleDeleteTask = () => {
+    dispatch({ type: 'loading', payload: true })
+    const response = fetch('http://localhost:4000/user/today/delete-the-task', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ taskId: schedule.id })
+    })
+
+    const result = response.then(response => response.json())
+    result.then(result => {
+
+      if (result.msg === 'Task Deleted SuccessFully') {
+        dispatch({ type: 'taskdeleted' })
+        dispatch({ type: 'loading', payload: false })
+        toast.success(result.msg, {
+          position: 'top-right'
+        })
+      }
+
+      else {
+        dispatch({ type: 'loading', payload: false })
+        toast.error(result.msg, {
+          position: 'top-right'
+        })
+      }
+    })
+      .catch(error => {
+        dispatch({ type: 'loading', payload: false })
+        toast.error('Error', {
+          position: 'top-right'
+        })
+      })
+  }
+
+
+  const ellipsisItems = [
+    {
+      key: '1',
+      label: (
+        <Link rel="noopener noreferrer">
+          <div className='flex gap-1 items-center text-blue-500'>
+            <Pencil strokeWidth={0.75} />
+            <h1 className='text-lg'>Edit</h1>
+          </div>
+        </Link>
+      ),
+    },
+
+    {
+      key: '2',
+      label: (
+        <Link rel="noopener noreferrer" onClick={handleDeleteTask}>
+          <div className='flex gap-1 items-center text-red-500'>
+            <Trash2 strokeWidth={0.75} />
+            <h1 className='text-lg'>Delete</h1>
+          </div>
+        </Link>
+      ),
+    }
+  ]
+
 
   return (
     <>

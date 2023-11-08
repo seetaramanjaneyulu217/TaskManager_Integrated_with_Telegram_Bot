@@ -13,7 +13,7 @@ const getTodaySchedules = async (req, res) => {
         const userId = req.user.userid
         const user = await Users.findById(userId)
 
-        res.status(200).json({ todaySchedules: user.todaysSchedule })
+        res.status(200).json({ todaySchedules: user.todaysSchedule, setRemainder: user.setRemainder })
     } catch (error) {
         res.status(500).json({ msg: 'Error while getting your tasks' })
     }
@@ -74,8 +74,8 @@ const markTaskAsDone = async (req, res) => {
         }
 
         const result = await Users.updateOne({ _id: userId }, updateFields)
-        
-        if(result) {
+
+        if (result) {
             res.status(200).json({ msg: 'Marked the task as done' })
         }
 
@@ -87,4 +87,57 @@ const markTaskAsDone = async (req, res) => {
     }
 
 }
-module.exports = { getTodaySchedules, addTodaySchedule, markTaskAsDone }
+
+
+
+const deleteTheTask = async (req, res) => {
+    try {
+        const userId = req.user.userid
+        const taskId = req.body.taskId
+
+        const user = await Users.findById(userId)
+        const schedulesAfterDeleting = user.todaysSchedule.filter(schedule => schedule.id !== taskId)
+
+        const updatedTodaySchedules = await Users.findOneAndUpdate({
+            todaysSchedule: schedulesAfterDeleting
+        }).where(req.user.userid)
+
+        if(updatedTodaySchedules) {
+            res.status(200).json({ msg: 'Task Deleted SuccessFully' })
+        }
+
+        else {
+            res.status(500).json({ msg: 'Unable to delete the task' })
+        }
+
+    } catch (error) {
+        res.status(500).json({ msg: 'Error while deleting the task' })
+    }
+}
+
+
+
+const setRemainder = async (req, res) => {
+    try {
+        const userId = req.user.userid
+        const setRemainder = req.body.remainder
+        
+        const user = await Users.findById(userId)
+        const updatedSetRemainder = await Users.findOneAndUpdate({
+            setRemainder: !user.setRemainder
+        }).where(req.user.userid)
+
+        if(updatedSetRemainder) {
+            res.status(200).json({ msg: 'Remainder Set SuccessFully', remainder: !user.setRemainder })
+        }
+
+        else {
+            res.status(500).json({ msg: 'Unable to set the remainder' })
+        }
+
+    } catch (error) {
+        res.status(500).json({ msg: 'Error while setting remainder' })
+    }
+}
+
+module.exports = { getTodaySchedules, addTodaySchedule, markTaskAsDone, deleteTheTask, setRemainder }
