@@ -51,16 +51,15 @@ const TodaySchedulesCard = ({ schedule }) => {
     const result = response.then(response => response.json())
     result.then(result => {
       if (result.msg === 'Marked the task as done') {
-
         dispatch({ type: 'taskdone' })
         dispatch({ type: 'loading', payload: false })
         toast.success(result.msg, {
           position: 'top-right'
         })
-
       }
 
       else {
+        dispatch({ type: 'loading', payload: false })
         toast.error(result.msg, {
           position: 'top-right'
         })
