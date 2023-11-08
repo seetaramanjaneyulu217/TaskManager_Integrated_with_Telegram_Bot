@@ -2,7 +2,8 @@ import { createStore } from "redux";
 
 const initialState = {
   isLoading: false,
-  taskadded: false
+  taskadded: false,
+  taskdone: false
 }
 
 const reducer = (state = initialState, action) => {
@@ -17,7 +18,14 @@ const reducer = (state = initialState, action) => {
   if (action.type === 'taskadded') {
     return {
       ...state,
-      taskadded: action.payload
+      taskadded: !state.taskadded
+    }
+  }
+
+  if (action.type === 'taskdone') {
+    return {
+      ...state,
+      taskdone: !state.taskdone
     }
   }
 

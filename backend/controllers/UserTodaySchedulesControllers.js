@@ -35,7 +35,7 @@ const addTodaySchedule = async (req, res) => {
             todaysSchedule: [...user.todaysSchedule, todayTask]
         }).where(req.user.userid)
 
-        if(updatedTodaySchedules) {
+        if (updatedTodaySchedules) {
             res.status(200).json({ msg: 'Task added SuccessFully' })
         }
 
@@ -48,4 +48,43 @@ const addTodaySchedule = async (req, res) => {
     }
 }
 
-module.exports = { getTodaySchedules, addTodaySchedule }
+
+const markTaskAsDone = async (req, res) => {
+    try {
+        const userId = req.user.userid
+        const taskId = req.body.taskId
+
+        const user = await Users.findById(userId)
+        const todaysSchedule = user.todaysSchedule
+
+        const completedTask = todaysSchedule.filter(schedule => schedule.id === taskId)
+        const updatedTodaySchedules = todaysSchedule.filter(schedule => schedule.id !== taskId)
+
+        const today = new Date()
+        const finalCompletedTask = {
+            date: `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`.toString(),
+            ...completedTask[0]
+        }
+
+        const updateFields = {
+            $set: {
+                todaysSchedule: updatedTodaySchedules,
+                completedTodaysTasks: [...user.completedTodaysTasks, finalCompletedTask]
+            }
+        }
+
+        const result = await Users.updateOne({ _id: userId }, updateFields)
+        
+        if(result) {
+            res.status(200).json({ msg: 'Marked the task as done' })
+        }
+
+        else {
+            res.status(200).json({ msg: 'Unable to mark the task as done' })
+        }
+    } catch (error) {
+        res.status(500).json({ msg: 'Error while marking the task as done' })
+    }
+
+}
+module.exports = { getTodaySchedules, addTodaySchedule, markTaskAsDone }

@@ -88,7 +88,7 @@ const TodaySchedulesForm = () => {
                     position: 'top-right'
                 })
 
-                dispatch({ type: 'taskadded', payload: true })
+                dispatch({ type: 'taskadded' })
             }
 
             else {
