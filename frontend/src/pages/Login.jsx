@@ -15,7 +15,7 @@ const Login = () => {
                     <LoginForm />
 
                     {/* For image */}
-                    <div className=''>
+                    <div>
                         <img src={loginimage} alt='loginimage' className='h-[390px] w-[450px]' />
                     </div>
                 </div>

@@ -3,7 +3,7 @@ import { Button } from 'antd'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 const LoginForm = () => {
 
@@ -16,7 +16,6 @@ const LoginForm = () => {
   })
 
   const [openOTPForm, setopenOTPForm] = useState(false)
-  const isLoading = useSelector(state => state.isLoading)
 
   const handleGetOTP = () => {
 

@@ -1,7 +1,8 @@
 import { createStore } from "redux";
 
 const initialState = {
-  isLoading: false
+  isLoading: false,
+  taskadded: false
 }
 
 const reducer = (state = initialState, action) => {
@@ -10,6 +11,13 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       isLoading: action.payload
+    }
+  }
+
+  if (action.type === 'taskadded') {
+    return {
+      ...state,
+      taskadded: action.payload
     }
   }
 

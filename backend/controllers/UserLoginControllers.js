@@ -16,6 +16,8 @@ const UserLoginDetailsValidation = require('../validations/UserLoginDetailsValid
 let otp
 
 
+
+// Controllers
 const sendOTPToTheUser = async (req, res) => {
     try {
 

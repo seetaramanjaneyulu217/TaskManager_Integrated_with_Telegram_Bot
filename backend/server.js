@@ -8,6 +8,7 @@ const app = express()
 // Imports 
 const connectToDataBase = require('./config/connect.js')
 const UserLoginRoutes = require('./routes/UserLoginRoutes.js')
+const UserTodaySchedulesRoutes = require('./routes/UserTodaySchedulesRoutes.js')
 
 
 // Middlewares and function calls
@@ -25,6 +26,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/user', UserLoginRoutes)
+app.use('/user/today', UserTodaySchedulesRoutes)
 
 
 // Running the server
